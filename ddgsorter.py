@@ -77,8 +77,85 @@ def plot_ddg_vs_res(filename):
 
     return None
 
+def plot_ddgavg_vs_res(filename):
+    """
+    Plots average ddg on the y axis according to its residue on the x axis.
+    Parameters:
+    filename (type: string): name of .csv file with ddg data
+    Returns:
+    None
+    """
+    x_val, y_val = res_avg(filename)
+    ppl.scatter(x_val, y_val)
+    ppl.show()
+
+    return None
+
+def largest_val(list_val):
+    """
+    Returns largest value from a list
+    Parameters:
+    list_val (type: list with int): list of values
+    Returns:
+    lar_val (type: int or float): largest value from a list
+    """
+    lar_val = list_val[0]
+    for val in list_val:
+        if val > lar_val:
+            lar_val = val
+    return lar_val
+
+def calc_avg(list_val):
+    """
+    Returns average value from a list of values
+    Parameters:
+    list_val (type: list with int): list of values
+    Returns:
+    avg (type: float): average from list of values
+    """
+    sum_val = 0
+    count_val = 0
+    for val in list_val:
+        sum_val += val
+        count_val += 1
+    avg = float(sum_val / count_val)
+
+    return avg
+
+def res_avg(filename):
+    """
+    Obtains the average ddg for each residue.
+    Parameters:
+    filename (type: string): .csv file with ddg data
+    Returns:
+    residue (type: list with intergers):
+    ddg_average (type: list with intergers): 
+    """
+
+    # Obtains data on residue and ddg from file
+    res, ddg = ddg_x_res_y(filename)
+    
+    # Create list with empty list for each residue
+    lar_val = int(largest_val(res))
+    list_res = []
+    for i in range(lar_val):
+        mt = []
+        list_res.append(mt)
+    # Puts values in list
+    res_len = len(res)
+    for i in range(res_len):
+        list_res[int(res[i]) - 1].append(ddg[i])
+    # Calculates average for each point
+    residue = []
+    ddg_average = []
+    for i in range(lar_val):
+        residue.append(i + 1)
+        ddg_average.append(calc_avg(list_res[i]))
+
+    return residue, ddg_average
+
 def main():
-    choice = int(input('what do you want to do?\n1) convert .txt of ddg data to .csv\n2) plot .ddg data from .csv\nChoose by inputing interger: '))
+    choice = int(input('what do you want to do?\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\nChoose by inputing interger: '))
     if choice == 1:
         filename_in = input('filename_in: ')
         filename_out = input('filename out: ')
@@ -86,5 +163,8 @@ def main():
     if choice == 2:
         filename = input('filename: ')
         plot_ddg_vs_res(filename)
+    if choice == 3:
+        filename = input('filename: ')
+        plot_ddgavg_vs_res(filename)
 if __name__ == "__main__":
     main()
