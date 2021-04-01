@@ -195,7 +195,9 @@ def res_avg(filename):
     return residue, ddg_average
 
 def main():
-    choice = int(input('what do you want to do?\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\n4) plot difference between 2 ddg samples with same residues and mutations\nChoose by inputing interger: '))
+    choice = int(input('what do you want to do?\n0) close\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\n4) plot difference between 2 ddg samples with same residues and mutations\nChoose by inputing interger: '))
+    if choice == 0:
+        None
     if choice == 1:
         filename_in = input('filename_in: ')
         filename_out = input('filename out: ')
