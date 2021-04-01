@@ -91,6 +91,28 @@ def plot_ddgavg_vs_res(filename):
 
     return None
 
+def plot_diff(filenames):
+    """
+    Graphs the difference between two files.
+    Parameters:
+    filenames (type: string): 2 .csv filenames
+    Returns:
+    None
+    """
+    # Obtain data from files
+    fn_list = convert_filenames_to_list(filenames)
+    res_x, ddg_y_1 = ddg_x_res_y(fn_list[0])
+    res_x, ddg_y_2 = ddg_x_res_y(fn_list[1])
+    # Calculate difference
+    diff_y = []
+    for i in range(len(res_x)):
+        diff_y.append(ddg_y_1[i] - ddg_y_2[i])
+    # Plot difference
+    ppl.scatter(res_x, diff_y)
+    ppl.show()
+
+    return None
+
 def largest_val(list_val):
     """
     Returns largest value from a list
@@ -104,6 +126,24 @@ def largest_val(list_val):
         if val > lar_val:
             lar_val = val
     return lar_val
+
+def convert_filenames_to_list(filenames):
+    """
+    Converts a string of filenames to a list of filenames.
+    Parameters:
+    filenames (type: string): names of files, separated by commas, so they
+    may be converted into a list
+    Returns:
+    nl (type: list): list of separated filenames.
+    """
+    # Convert "filenames" to string without spaces
+    ns = ""
+    for i in filenames:
+        if i != " ":
+            ns += i
+    #splits string into list
+    nl = ns.split(',')
+    return nl
 
 def calc_avg(list_val):
     """
@@ -155,16 +195,23 @@ def res_avg(filename):
     return residue, ddg_average
 
 def main():
-    choice = int(input('what do you want to do?\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\nChoose by inputing interger: '))
+    choice = int(input('what do you want to do?\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\n4) plot difference between 2 ddg samples with same residues and mutations\nChoose by inputing interger: '))
     if choice == 1:
         filename_in = input('filename_in: ')
         filename_out = input('filename out: ')
         txt_to_csv(filename_in, filename_out)
+        main()
     if choice == 2:
         filename = input('filename: ')
         plot_ddg_vs_res(filename)
+        main()
     if choice == 3:
         filename = input('filename: ')
         plot_ddgavg_vs_res(filename)
+        main()
+    if choice == 4:
+        filenames = input('filenames (2 .csv files): ')
+        plot_diff(filenames)
+        main()
 if __name__ == "__main__":
     main()
