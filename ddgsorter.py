@@ -248,5 +248,7 @@ def main():
         filename_out = input('filename_out (must be .csv): ')
         significance = float(input('choose significance: '))
         sig_fig_finder(filename_in, filename_out, significance)
+        main()
+
 if __name__ == "__main__":
     main()
