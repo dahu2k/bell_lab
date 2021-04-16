@@ -194,8 +194,36 @@ def res_avg(filename):
 
     return residue, ddg_average
 
+def sig_fig_finder(filename_in, filename_out, significance):
+    """
+    Finds how many significant ddg in each mutation.
+    Parameters:
+    filename (type: string):
+    significance (type: float):
+    """
+    f = open(filename_in, 'r')
+    w = open(filename_out, 'w')
+    f.readline()
+    w.write('residue,+_sig_count,-_sig_count,(cutoff_ddg=' + str(significance) + ')\n')
+    pos_sig_fig_count = {}
+    neg_sig_fig_count = {}
+    max_res = 0
+    for line in f: # Counts sig figs and adds to dictionary
+        data = line.split(',')
+        residue = data[2]
+        if float(data[4].strip('\n')) >= significance:
+            pos_sig_fig_count[residue] = pos_sig_fig_count.get(residue, 0) + 1
+        if float(data[4].strip('\n')) <= -significance:
+            neg_sig_fig_count[residue] = neg_sig_fig_count.get(residue, 0) + 1
+        if int(residue) > max_res: # Gets last residue
+            max_res = int(residue)
+    for i in range(max_res): # Writes outfile
+        residue = str(i + 1)
+        w.write(residue + ',' + str(pos_sig_fig_count.get(residue, 0)) + ',' + str(neg_sig_fig_count.get(residue, 0)) + '\n')
+    return None
+
 def main():
-    choice = int(input('what do you want to do?\n0) close\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\n4) plot difference between 2 ddg samples with same residues and mutations\nChoose by inputing interger: '))
+    choice = int(input('what do you want to do?\n0) close\n1) convert .txt of ddg data to .csv\n2) plot ddg data from .csv\n3) plot average ddg data from .csv\n4) plot difference between 2 ddg samples with same residues and mutations\n5) create file with significant figures for each residue\nChoose by inputing interger: '))
     if choice == 0:
         None
     if choice == 1:
@@ -215,5 +243,10 @@ def main():
         filenames = input('filenames (2 .csv files): ')
         plot_diff(filenames)
         main()
+    if choice == 5:
+        filename_in = input('filename_in (must be .csv): ')
+        filename_out = input('filename_out (must be .csv): ')
+        significance = float(input('choose significance: '))
+        sig_fig_finder(filename_in, filename_out, significance)
 if __name__ == "__main__":
     main()
